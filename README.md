@@ -1,6 +1,6 @@
 # 马晓光教授课题组主页
 
-沿用 [Huazhe Xu 学术主页](http://hxu.rocks/index.html) 的简洁内容组织，现已根据[天津大学人工智能学院马晓光教授官方介绍](https://sai.tju.edu.cn/info/1361/6321.htm)更新。保留首页、研究成果、团队成员、加入我们、联系我们五个栏目，适合 GitHub Pages。
+已根据[天津大学人工智能学院马晓光教授官方介绍](https://sai.tju.edu.cn/info/1361/6321.htm)更新。保留首页、研究成果、团队成员、加入我们、联系我们五个栏目，适合 GitHub Pages。
 
 网站访客页面现为全英文：Home、Publications、People、Join Us、Contact。正文和姓名也请填写英文。中文 README 与资料来源说明供本地维护使用。
 

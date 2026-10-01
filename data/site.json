@@ -1,0 +1,351 @@
+{
+  "site": {
+    "name": "Xiaoguang Ma Research Group",
+    "englishName": "Xiaoguang Ma Research Group",
+    "mark": "XM",
+    "institution": "Tianjin University · School of Artificial Intelligence",
+    "description": "Xiaoguang Ma's research group at Tianjin University's School of Artificial Intelligence studies embodied robotics, aerial embodied intelligence, and Agentic AI for robotics.",
+    "demo": false,
+    "updated": "2026-09-25",
+    "email": "coltlight@163.com",
+    "address": "School of Artificial Intelligence, Tianjin University (please email to confirm the visit location)",
+    "postalCode": "",
+    "image": "assets/images/ma-xiaoguang.jpg",
+    "imageAlt": "Professor Xiaoguang Ma's portrait from the faculty directory of Tianjin University's School of Artificial Intelligence",
+    "imageCaption": "Xiaoguang Ma · Beiyang Chair Professor",
+    "links": [
+      {
+        "label": "School Website",
+        "url": "https://sai.tju.edu.cn/"
+      },
+      {
+        "label": "Faculty Profile",
+        "url": "https://sai.tju.edu.cn/info/1361/6321.htm"
+      }
+    ],
+    "imagePortrait": true,
+    "imageWidth": 300,
+    "imageHeight": 415,
+    "imageSource": "https://sai.tju.edu.cn/szdw/qzjs/k_o.htm",
+    "sourceUrl": "https://sai.tju.edu.cn/info/1361/6321.htm",
+    "subtitle": "Embodied Intelligence & Autonomous Systems"
+  },
+  "home": {
+    "eyebrow": "RESEARCH GROUP · TIANJIN UNIVERSITY",
+    "heading": "Embodied Intelligence & Autonomous Systems",
+    "paragraphs": [
+      "Xiaoguang Ma is a Beiyang Chair Professor at Tianjin University's School of Artificial Intelligence and supervises Ph.D. and master's students. His research spans Physical AI, Agentic AI, AI4Engr, and unmanned systems.",
+      "Our group studies embodied robotics, aerial vision-language navigation, and agent-driven robotic systems, with a focus on perception, learning, and autonomous decision-making in physical environments."
+    ],
+    "recruitment": "We welcome inquiries from postdoctoral researchers, Ph.D. and master's students, and undergraduate research interns interested in embodied intelligence and AI agents."
+  },
+  "research": [
+    {
+      "number": "01",
+      "title": "Embodied Robotics",
+      "english": "",
+      "description": "We study imitation learning and the links between perception and action to develop intelligent robotic behavior for real-world tasks."
+    },
+    {
+      "number": "02",
+      "title": "Aerial Embodied Intelligence",
+      "english": "",
+      "description": "We combine visual and spatial reasoning for aerial vision-language navigation, studying how unmanned systems understand their environments and navigation instructions."
+    },
+    {
+      "number": "03",
+      "title": "Agentic AI for Robotics",
+      "english": "",
+      "description": "We explore how multimodal large models can support robotic systems, developing navigation and decision-making frameworks that learn autonomously and improve over time."
+    }
+  ],
+  "news": [
+    {
+      "date": "2026.06.01",
+      "category": "Talk",
+      "text": "Professor Xiaoguang Ma presented research on autonomous learning and evolution in embodied navigation at Tianjin University's Beiyang Intelligent Computing Forum.",
+      "url": "https://sai.tju.edu.cn/info/1121/5341.htm"
+    },
+    {
+      "date": "2026.03.21",
+      "category": "Academic Exchange",
+      "text": "Professor Xiaoguang Ma was invited to the Beiyang Intelligent Computing Forum to give a talk on the transition from physical intelligence to embodied intelligence.",
+      "url": "https://news.tju.edu.cn/info/1013/589369.htm"
+    }
+  ],
+  "publications": [
+    {
+      "id": "visa-aerial-vln",
+      "year": "2026",
+      "title": "ViSA-Enhanced Aerial VLN: A Visual-Spatial Reasoning Enhanced Framework for Aerial Vision-Language Navigation",
+      "englishTitle": "",
+      "titleLang": "en",
+      "authors": "Haoyu Tong et al.",
+      "venue": "IROS 2026 · Accepted",
+      "area": "Aerial Navigation",
+      "abstract": "Combines perception, verification, and execution with structured visual prompts to improve spatial reasoning in UAV vision-language navigation.",
+      "selected": true,
+      "links": [
+        {
+          "label": "arXiv",
+          "url": "https://arxiv.org/abs/2603.08007"
+        },
+        {
+          "label": "Acceptance Information",
+          "url": "https://sai.tju.edu.cn/info/1361/6321.htm"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "se-vln",
+      "year": "2026",
+      "title": "SE-VLN: A Self-Evolving Vision-Language Navigation Framework Based on Multimodal Large Language Models",
+      "englishTitle": "",
+      "titleLang": "en",
+      "authors": "Xiangyu Dong et al.",
+      "venue": "ACSAT 2026 (as listed on the school website) · arXiv:2507.13152",
+      "area": "Vision-Language Navigation",
+      "abstract": "Combines hierarchical memory, experience retrieval, and reflection so vision-language navigation agents can accumulate experience and improve decisions during testing.",
+      "selected": true,
+      "links": [
+        {
+          "label": "arXiv",
+          "url": "https://arxiv.org/abs/2507.13152"
+        },
+        {
+          "label": "School Listing",
+          "url": "https://sai.tju.edu.cn/info/1361/6321.htm"
+        }
+      ],
+      "note": "The preprint was first released in 2025. This page lists it under 2026 based on the conference information on the school website."
+    },
+    {
+      "id": "subconscious-imitation",
+      "year": "2025",
+      "title": "Subconscious Robotic Imitation Learning",
+      "englishTitle": "",
+      "titleLang": "en",
+      "authors": "Jun Xie et al.",
+      "venue": "ECAI 2025 · FAIA 413: 3559–3566",
+      "area": "Imitation Learning",
+      "abstract": "Inspired by subconscious behavior, the method uses intention-aware sampling and cognitive offloading to reduce redundant reasoning and improve execution efficiency in dual-arm robotic imitation learning.",
+      "selected": true,
+      "links": [
+        {
+          "label": "Publication Record",
+          "url": "https://journals.sagepub.com/doi/10.3233/FAIA251231"
+        },
+        {
+          "label": "arXiv",
+          "url": "https://arxiv.org/abs/2412.20368"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "m3dss",
+      "year": "2025",
+      "title": "M3DSS: A Multi-Platform, Multi-Sensor, and Multi-Scenario Dataset for SLAM System",
+      "englishTitle": "",
+      "titleLang": "en",
+      "authors": "S. Huang et al.",
+      "venue": "IEEE ICRA 2025 · pp. 14542–14549",
+      "area": "SLAM Datasets",
+      "abstract": "Provides synchronized data across robotic platforms, sensors, and complex environments to support the evaluation and comparison of SLAM systems.",
+      "selected": false,
+      "links": [
+        {
+          "label": "DOI",
+          "url": "https://doi.org/10.1109/ICRA55743.2025.11128631"
+        },
+        {
+          "label": "Project / Dataset",
+          "url": "https://neufs-ma.github.io/M3DSS/"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "frefusion",
+      "year": "2025",
+      "title": "Frefusion: Frequency Domain Transformer for Infrared and Visible Image Fusion",
+      "englishTitle": "",
+      "titleLang": "en",
+      "authors": "J. Shi et al.",
+      "venue": "IEEE Transactions on Multimedia · 2025",
+      "area": "Image Fusion",
+      "abstract": "Studies infrared and visible image fusion using a frequency-domain Transformer.",
+      "selected": false,
+      "links": [
+        {
+          "label": "DOI",
+          "url": "https://doi.org/10.1109/TMM.2025.3543019"
+        }
+      ],
+      "note": ""
+    }
+  ],
+  "team": {
+    "intro": "Our research focuses on embodied intelligence, robotics, and autonomous systems.",
+    "groups": [
+      {
+        "id": "phd",
+        "title": "Ph.D. Students",
+        "english": "",
+        "emptyMessage": "Ph.D. student profiles will be added as they become available.",
+        "members": []
+      },
+      {
+        "id": "masters",
+        "title": "Master's Students",
+        "english": "",
+        "emptyMessage": "Master's student profiles will be added as they become available.",
+        "members": []
+      },
+      {
+        "id": "interns",
+        "title": "Research Interns",
+        "english": "",
+        "emptyMessage": "Research intern profiles will be added as they become available.",
+        "members": []
+      }
+    ],
+    "teachers": [
+      {
+        "name": "Xiaoguang Ma",
+        "englishName": "Xiaoguang Ma",
+        "role": "Beiyang Chair Professor · Supervisor of Ph.D. and Master's Students",
+        "initials": "XM",
+        "photo": "assets/images/ma-xiaoguang.jpg",
+        "bio": "Xiaoguang Ma holds a Ph.D. in Mechanical Control from the University of California, Berkeley. He has worked in industrial research and development and university teaching, and joined Tianjin University's School of Artificial Intelligence in 2026. He teaches Introduction to Embodied Intelligence and related practical courses.",
+        "links": [
+          {
+            "label": "Official Faculty Profile",
+            "url": "https://sai.tju.edu.cn/info/1361/6321.htm"
+          },
+          {
+            "label": "Email",
+            "url": "mailto:coltlight@163.com"
+          }
+        ],
+        "experience": [
+          {
+            "period": "2026—Present",
+            "institution": "Tianjin University",
+            "detail": "School of Artificial Intelligence · Chair Professor"
+          },
+          {
+            "period": "2021—2026",
+            "institution": "Northeastern University",
+            "detail": "School of Information / School of Robotics · Professor"
+          },
+          {
+            "period": "2018—2021",
+            "institution": "Smart City Research Institute, Southeast University",
+            "detail": "Professor"
+          },
+          {
+            "period": "2014—2018",
+            "institution": "Shanghai Yaoyu Aviation",
+            "detail": "Chief Scientist"
+          },
+          {
+            "period": "2009—2014",
+            "institution": "Suntech Power",
+            "detail": "Chief Engineer"
+          },
+          {
+            "period": "2005—2009",
+            "institution": "Applied Materials",
+            "detail": "Senior Principal R&D Engineer"
+          }
+        ],
+        "education": [
+          {
+            "period": "2001—2005",
+            "institution": "University of California, Berkeley",
+            "detail": "Mechanical Control · Ph.D."
+          },
+          {
+            "period": "1998—2001",
+            "institution": "Beihang University",
+            "detail": "Solid Mechanics · Master's Degree"
+          },
+          {
+            "period": "1994—1998",
+            "institution": "Beihang University",
+            "detail": "Aircraft Design · Bachelor's Degree"
+          }
+        ]
+      }
+    ]
+  },
+  "join": {
+    "intro": "We welcome students and researchers with a passion for embodied intelligence and agent-driven robotics who are eager to solve engineering problems.",
+    "positions": [
+      {
+        "title": "Postdoctoral Researchers",
+        "english": "",
+        "description": "Conduct research in embodied robotics, low-altitude intelligent systems, and Agentic AI.",
+        "note": "Please email to discuss position requirements and arrangements."
+      },
+      {
+        "title": "Ph.D. Students",
+        "english": "",
+        "description": "We welcome students seeking in-depth research in embodied intelligence, robotics, and autonomous systems.",
+        "note": "Eligibility and application dates follow the current university and school admissions notices."
+      },
+      {
+        "title": "Master's Students",
+        "english": "",
+        "description": "We welcome students interested in our research areas who wish to gain research and engineering experience.",
+        "note": "Please contact us in line with the university and school admissions schedule."
+      },
+      {
+        "title": "Undergraduate Research Interns",
+        "english": "",
+        "description": "We welcome undergraduate students interested in embodied intelligence with practical engineering skills.",
+        "note": "In your email, describe your previous projects and availability."
+      }
+    ],
+    "application": [
+      "Send your application materials to our contact email.",
+      "Include your CV and relevant research or engineering project experience.",
+      "Add links to publications, code, or a personal website if available."
+    ],
+    "subject": "Position-Name-University-Year of Study-Research Area",
+    "cultureTitle": "Recruitment",
+    "cultureEnglish": "",
+    "culture": "The official faculty profile states that recruitment is ongoing. Please email directly to discuss positions, research topics, and application arrangements.",
+    "sourceUrl": "https://sai.tju.edu.cn/info/1361/6321.htm"
+  },
+  "contact": {
+    "intro": "For research collaboration, academic exchange, or opportunities to join the group, contact Professor Xiaoguang Ma at the public email address below.",
+    "visit": "Before visiting, please email to confirm the campus, building, and meeting time.",
+    "directions": "Explore the official links below for more information about the university and school."
+  },
+  "projects": [
+    {
+      "title": "Research and Demonstration of a Large-Model Platform for Embodied Intelligence in Industrial Robotics",
+      "period": "2024–2027",
+      "funding": "Hunan Provincial Major Project Fund",
+      "role": "Principal Investigator",
+      "amount": "CNY 5 million"
+    },
+    {
+      "title": "AI-Based Online Inspection for Robotic Harmonic Reducer Manufacturing",
+      "period": "2022–2025",
+      "funding": "Guangdong Basic and Applied Basic Research Foundation",
+      "role": "Principal Investigator",
+      "amount": "CNY 300,000"
+    },
+    {
+      "title": "Object Detection in Complex Backgrounds for Construction Robots",
+      "period": "2023–2024",
+      "funding": "Commissioned Research Project",
+      "role": "Principal Investigator",
+      "amount": "CNY 2 million"
+    }
+  ]
+}

@@ -7,3 +7,5 @@ Thumbs.db
 *.log
 .qa/
 lab-homepage-upload.zip
+
+dist/

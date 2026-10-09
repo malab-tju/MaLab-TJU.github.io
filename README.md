@@ -1,8 +1,10 @@
 # 马晓光教授课题组主页
 
-已根据[天津大学人工智能学院马晓光教授官方介绍](https://sai.tju.edu.cn/info/1361/6321.htm)更新。保留首页、研究成果、团队成员、加入我们、联系我们五个栏目，适合 GitHub Pages。
+沿用 [Huazhe Xu 学术主页](http://hxu.rocks/index.html) 的简洁内容组织，现已根据[天津大学人工智能学院马晓光教授官方介绍](https://sai.tju.edu.cn/info/1361/6321.htm)更新。保留首页、研究成果、团队成员、加入我们、联系我们五个栏目，适合 GitHub Pages。
 
 网站访客页面现为全英文：Home、Publications、People、Join Us、Contact。正文和姓名也请填写英文。中文 README 与资料来源说明供本地维护使用。
+
+现在还提供英文 **`admin/` 内容编辑页面**，可用表单维护全部内容。按 [EDITOR_SETUP.md](EDITOR_SETUP.md) 完成一次设置后，有权限的人提交即可自动生成并发布网页。
 
 **已生成完整网页，可以直接双击 `index.html` 浏览。上传这些现成网页不需要安装依赖或配置构建服务。**
 
@@ -91,20 +93,19 @@ JSON 中的键名和文字要保留英文双引号，每个条目之间用英文
 
 `site.sourceUrl` 控制每页页脚的官方资料链接。`site.postalCode` 留空时隐藏邮编栏目。新增成员和照片时请使用确认可公开的资料。
 
-## 3. 上传 GitHub 并上线
+## 3. 上传 GitHub 并开启在线编辑
 
-1. 登录 GitHub，新建一个 **Public** 仓库。推荐名称为 `你的用户名.github.io`，例如用户名是 `my-lab`，仓库名就填 `my-lab.github.io`。这类网站地址为 `https://你的用户名.github.io/`。
-2. 把本文件夹内的文件和 `assets`、`data`、`tools` 文件夹上传到仓库，确保仓库首页能直接看到 `index.html`，不要再包一层「实验室主页」文件夹。也可以解压提供的 `lab-homepage-upload.zip` 后上传里面的文件；不要只上传压缩包本身。
-3. 保留根目录的空文件 `.nojekyll`。如网页上传时漏掉，可以在 GitHub 仓库用 **Add file → Create new file** 创建 `.nojekyll`，写一行说明也可以。
-4. 打开仓库 **Settings → Pages**。在 **Build and deployment** 中，Source 选择 **Deploy from a branch**，Branch 选择 **main**，目录选择 **/(root)**，点击 **Save**。
-5. 等待发布完成，在同一页面点击 **Visit site** 查看。更新可能需要最多约 10 分钟。
-6. 以后每次改完 `data/site.json`，先在本地运行 `build.cmd`，检查网页，再把改动后的资料、图片及 **5 个生成的 HTML 文件** 上传并提交到 `main`。GitHub Pages 会自动更新。
+当前公开网站为 `https://malab-tju.github.io/`，仓库为 `malab-tju/MaLab-TJU.github.io`。新版编辑地址在首次部署完成后为 `https://malab-tju.github.io/admin/`。
 
-普通仓库名（如 `lab-homepage`）也可以，网站地址会变成 `https://你的用户名.github.io/lab-homepage/`。本站使用相对路径，兼容这两种地址，无需修改路径配置。
+1. 解压更新后的 `lab-homepage-upload.zip`，上传里面的文件到现有仓库 `main` 根目录，包含 `admin`、`data`、`assets`、`tools` 和 `.github` 文件夹；不要只上传 ZIP 或再套一层文件夹。
+2. 检查 `.github/workflows/deploy.yml` 已上传。漏掉时用 **Add file → Create new file** 创建该路径，复制本地对应文件的内容。
+3. 进入仓库 **Settings → Pages**，把 **Source** 设为 **GitHub Actions**。
+4. 进入 **Actions → Build and deploy lab website → Run workflow**，选择 `main`；构建与部署成功后打开网站 `/admin/`。
+5. 给编辑者组织 Member 身份与该仓库 Write 权限。每位编辑者配置自己的、只允许该仓库 Contents 读写的 fine-grained token，然后在编辑页连接、填写和提交。
 
-GitHub Free 支持为公开仓库提供 Pages。只上传愿意公开的资料，不要放账号密码、密钥或内部文件。
+详细步骤、组织审批、草稿恢复及出错排查见 [EDITOR_SETUP.md](EDITOR_SETUP.md)。新版工作流从 `data/site.json` 生成网页并发布，不把生成的 HTML 写回仓库。网页更新以成功部署后的公开站点为准。
 
-官方说明：[创建 Pages 站点](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site) · [设置发布分支](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site) · [GitHub Pages 快速入门](https://docs.github.com/en/pages/quickstart)
+仅本地查看和维护仍可双击 `index.html`、运行 `build.cmd`。要查看编辑页请运行 `npm start`，然后访问 `http://127.0.0.1:4173/admin/`；编辑页使用模块与 JSON 请求，不能通过双击 HTML 完整运行。
 
 ## 4. 文件结构
 
@@ -119,6 +120,9 @@ assets/images/             首页图片与成员照片
 data/site.json             日常维护的内容文件
 tools/build.mjs            从内容文件生成五个静态页面
 tools/preview.mjs          仅用于本机的预览服务
+admin/                     英文内容编辑页与 GitHub 提交逻辑
+.github/workflows/deploy.yml 自动生成并部署到 GitHub Pages
+EDITOR_SETUP.md            在线编辑的一次性设置说明
 build.cmd                  Windows 双击更新网页
 package.json               可选的命令入口，无第三方依赖
 .nojekyll                  告诉 GitHub 直接发布静态文件
@@ -126,14 +130,14 @@ package.json               可选的命令入口，无第三方依赖
 
 需要调整布局时修改 `tools/build.mjs`，调整字体、宽度或颜色时修改 `assets/css/style.css`。CSS 顶部的 `--blue` 与 `--blue-dark` 控制主题色。修改生成模板后需要重新运行 `build.cmd`；只改 CSS 时刷新页面即可。
 
-本站未接入统计、表单、后台或第三方服务。联系链接会打开访客自己的邮件软件。网站没有自动同步官网或抓取论文的功能，后续由你维护 `data/site.json`；更新上传包时也要重新打包，原压缩包不会自动变化。
+公开网站未接入统计或联系表单。联系链接打开访客的邮件软件；内容编辑页通过 GitHub API 将修改提交到仓库，随后自动发布。网站没有自动同步教师官网或抓取论文的功能，后续仍需编辑者维护真实资料。更新源码上传包时要重新打包，原压缩包不会自动变化。
 
 ## 5. 常见问题
 
-- **只改了 JSON，网站没有变化？** 还需要运行 `build.cmd`，并上传新生成的 HTML。GitHub Pages 直接展示 HTML，不运行这个本地生成脚本。
+- **只改了 JSON，网站没有变化？** 本地查看需要运行 `build.cmd`。开启新版自动发布后，提交 JSON 到 `main` 会由 GitHub Actions 自动生成；查看 Actions 是否成功。
 - **运行时报 JSON 错误？** 检查英文双引号、逗号和括号是否成对；根据报错修正后再运行。生成失败时原有页面会保留。
 - **照片在本地能显示，上传后不显示？** 检查图片是否一并上传、文件名大小写是否完全一致、路径是否使用 `/`。
 - **显示旧内容？** 等待 Pages 发布结束，尝试 `Ctrl+F5` 刷新。
 - **研究方向或成员有变化？** 修改内容文件并重新生成即可；更新导师职务、项目、论文接收状态时，也请同步维护资料来源和更新时间。
 
-当前马晓光教授的公开资料、照片与论文来源单独记录于 `SOURCES.md`。未使用任何参考网站的跟踪脚本。
+最初的许华哲主页仅作为排版参考；当前马晓光教授的公开资料、照片与论文来源单独记录于 `SOURCES.md`。未使用任何参考网站的跟踪脚本。

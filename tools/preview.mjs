@@ -5,14 +5,14 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const port = Number(process.env.PORT || 4173);
-const mime = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.pdf': 'application/pdf' };
+const mime = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.json': 'application/json; charset=utf-8', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.pdf': 'application/pdf' };
 const server = http.createServer((req, res) => {
   if (req.method !== 'GET' && req.method !== 'HEAD') { res.writeHead(405).end(); return; }
   try {
     const raw = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
-    const file = path.resolve(root, '.' + (raw === '/' ? '/index.html' : raw));
+    const file = path.resolve(root, '.' + (raw === '/' ? '/index.html' : raw === '/admin' || raw === '/admin/' ? '/admin/index.html' : raw));
     const relative = path.relative(root, file);
-    const publicFile = /^(index|publications|team|join|contact)\.html$/.test(relative) || relative.startsWith('assets' + path.sep);
+    const publicFile = /^(index|publications|team|join|contact)\.html$/.test(relative) || relative.startsWith('assets' + path.sep) || relative.startsWith('admin' + path.sep) || relative === 'data' + path.sep + 'site.json';
     if (!publicFile || relative.startsWith('..') || path.isAbsolute(relative) || !fs.existsSync(file) || !fs.statSync(file).isFile()) { res.writeHead(404).end('Not found'); return; }
     res.writeHead(200, { 'Content-Type': mime[path.extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-store' });
     if (req.method === 'HEAD') res.end(); else fs.createReadStream(file).pipe(res);

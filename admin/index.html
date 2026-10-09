@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <title>Content Editor | Xiaoguang Ma Research Group</title>
+  <link rel="stylesheet" href="editor.css">
+  <script type="module" src="editor.mjs"></script>
+</head>
+<body>
+  <a class="skip-link" href="#editor-main">Skip to editor</a>
+  <header class="editor-header">
+    <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">XM</span><span>Research Group<span class="brand-subtitle">Website content editor</span></span></a>
+    <a class="view-site" href="../index.html" target="_blank" rel="noopener noreferrer">View website ↗</a>
+  </header>
+  <main id="editor-main" class="workspace">
+    <section class="connection-card" aria-labelledby="connection-title">
+      <div><p class="eyebrow">EDIT &amp; PUBLISH</p><h1 id="connection-title">Update the research group website</h1><p class="intro">Edit the fields below, then submit your changes. A GitHub account with write access to this repository is required to publish.</p></div>
+      <p class="repository-target" id="repository-target">Repository: <a id="target-repository" target="_blank" rel="noopener noreferrer">Loading configuration…</a><span> · Branch: <strong id="target-branch">…</strong></span></p>
+      <form id="connect-form" class="connect-form">
+        <label for="github-token">GitHub fine-grained personal access token</label>
+        <div class="token-row"><input id="github-token" name="github-token" type="password" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Paste your token to connect" required><button id="connect-button" type="submit">Connect GitHub</button></div>
+        <p class="help">Select this repository and grant <strong>Contents: Read and write</strong>. Your token stays in this tab's memory and is cleared when the tab is closed. <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">Create a token ↗</a></p>
+      </form>
+      <div id="connected-state" class="connected-state" hidden><span class="connection-dot" aria-hidden="true"></span><p>Connected to <a id="repository-link" target="_blank" rel="noopener noreferrer"></a></p><button id="disconnect-button" class="button-secondary" type="button">Disconnect</button></div>
+      <div id="status" class="status" role="status" aria-live="polite">Loading website content…</div>
+      <div id="error-box" class="error-box" role="alert" hidden><strong>Please check the following:</strong><ul id="error-list"></ul></div>
+      <div id="publish-result" class="publish-result" hidden><strong>Published commit — deployment in progress</strong><p>GitHub is building the website. Visit the deployment page to check when it is ready.</p><div><a id="commit-link" target="_blank" rel="noopener noreferrer">View commit ↗</a><a id="actions-link" target="_blank" rel="noopener noreferrer">View deployment ↗</a><a href="../index.html" target="_blank" rel="noopener noreferrer">View website ↗</a></div></div>
+    </section>
+    <div class="toolbar">
+      <p id="draft-state" class="draft-state"><span aria-hidden="true">●</span> <span id="draft-label">No unsaved changes</span></p>
+      <div class="toolbar-actions"><button id="download-draft" class="button-secondary" type="button" disabled>Download draft</button><button id="import-draft" class="button-secondary" type="button">Import draft</button><input id="draft-file" type="file" accept=".json,application/json" hidden><button id="submit-button" type="button" disabled>Submit changes</button></div>
+    </div>
+    <div class="editor-layout">
+      <nav class="section-nav" id="section-nav" aria-label="Content sections"></nav>
+      <section id="content-panel" class="content-panel" aria-label="Content fields" aria-busy="true"><p class="loading">Loading editable content…</p></section>
+    </div>
+    <footer class="editor-footer">Changes are saved to the repository immediately after submission. Website deployment may take a few minutes. <span>Download a draft before closing this tab to keep unfinished edits.</span></footer>
+  </main>
+  <dialog id="choice-dialog" aria-labelledby="dialog-title"><h2 id="dialog-title"></h2><p id="dialog-message"></p><div id="dialog-buttons" class="dialog-buttons"></div></dialog>
+</body>
+</html>

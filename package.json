@@ -3,6 +3,12 @@
   "private": true,
   "version": "1.0.0",
   "description": "A build-free-to-host academic lab website for GitHub Pages.",
-  "scripts": { "build": "node tools/build.mjs", "start": "node tools/preview.mjs" },
-  "engines": { "node": ">=18" }
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "start": "node tools/preview.mjs",
+    "test": "node --test tools/editor.test.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
 }

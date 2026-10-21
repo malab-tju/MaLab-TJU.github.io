@@ -4,7 +4,7 @@
     "englishName": "Xiaoguang Ma Research Group",
     "mark": "XM",
     "institution": "Tianjin University · School of Artificial Intelligence",
-    "description": "Xiaoguang Ma's research group at Tianjin University's School of Artificial Intelligence studies embodied robotics, aerial embodied intelligence, and Agentic AI for robotics.",
+    "description": "Xiaoguang Ma's research group at Tianjin University's School of Artificial Intelligence. Research areas include embodied robotics, aerial embodied intelligence, and Agentic AI for robotics.",
     "demo": false,
     "updated": "2026-09-25",
     "email": "coltlight@163.com",
@@ -28,35 +28,35 @@
     "imageHeight": 415,
     "imageSource": "https://sai.tju.edu.cn/szdw/qzjs/k_o.htm",
     "sourceUrl": "https://sai.tju.edu.cn/info/1361/6321.htm",
-    "subtitle": "Embodied Intelligence & Autonomous Systems"
+    "subtitle": ""
   },
   "home": {
-    "eyebrow": "RESEARCH GROUP · TIANJIN UNIVERSITY",
-    "heading": "Embodied Intelligence & Autonomous Systems",
+    "eyebrow": "",
+    "heading": "Embodied intelligence & autonomous systems",
     "paragraphs": [
-      "Xiaoguang Ma is a Beiyang Chair Professor at Tianjin University's School of Artificial Intelligence and supervises Ph.D. and master's students. His research spans Physical AI, Agentic AI, AI4Engr, and unmanned systems.",
-      "Our group studies embodied robotics, aerial vision-language navigation, and agent-driven robotic systems, with a focus on perception, learning, and autonomous decision-making in physical environments."
+      "The group works on embodied robotics, aerial vision-language navigation, and agent-driven robotic systems. Topics include perception, learning, and autonomous decision-making in physical environments.",
+      "Xiaoguang Ma is a Beiyang Chair Professor at Tianjin University's School of Artificial Intelligence and supervises Ph.D. and master's students. His research covers Physical AI, Agentic AI, AI4Engr, and unmanned systems."
     ],
-    "recruitment": "We welcome inquiries from postdoctoral researchers, Ph.D. and master's students, and undergraduate research interns interested in embodied intelligence and AI agents."
+    "recruitment": "For postdoctoral, Ph.D., master's, and undergraduate research opportunities in embodied intelligence and AI agents, please email Xiaoguang Ma."
   },
   "research": [
     {
       "number": "01",
       "title": "Embodied Robotics",
       "english": "",
-      "description": "We study imitation learning and the links between perception and action to develop intelligent robotic behavior for real-world tasks."
+      "description": "Imitation learning and perception-action methods for robotic tasks."
     },
     {
       "number": "02",
       "title": "Aerial Embodied Intelligence",
       "english": "",
-      "description": "We combine visual and spatial reasoning for aerial vision-language navigation, studying how unmanned systems understand their environments and navigation instructions."
+      "description": "Visual and spatial reasoning for aerial vision-language navigation, including environment understanding and instruction following."
     },
     {
       "number": "03",
       "title": "Agentic AI for Robotics",
       "english": "",
-      "description": "We explore how multimodal large models can support robotic systems, developing navigation and decision-making frameworks that learn autonomously and improve over time."
+      "description": "Multimodal large models for robotic navigation and decision-making, including frameworks for autonomous learning and improvement."
     }
   ],
   "news": [
@@ -187,27 +187,27 @@
     }
   ],
   "team": {
-    "intro": "Our research focuses on embodied intelligence, robotics, and autonomous systems.",
+    "intro": "Faculty and students in Xiaoguang Ma's research group.",
     "groups": [
       {
         "id": "phd",
         "title": "Ph.D. Students",
         "english": "",
-        "emptyMessage": "Ph.D. student profiles will be added as they become available.",
+        "emptyMessage": "Profiles to be added.",
         "members": []
       },
       {
         "id": "masters",
         "title": "Master's Students",
         "english": "",
-        "emptyMessage": "Master's student profiles will be added as they become available.",
+        "emptyMessage": "Profiles to be added.",
         "members": []
       },
       {
         "id": "interns",
         "title": "Research Interns",
         "english": "",
-        "emptyMessage": "Research intern profiles will be added as they become available.",
+        "emptyMessage": "Profiles to be added.",
         "members": []
       }
     ],
@@ -282,48 +282,48 @@
     ]
   },
   "join": {
-    "intro": "We welcome students and researchers with a passion for embodied intelligence and agent-driven robotics who are eager to solve engineering problems.",
+    "intro": "Please email Xiaoguang Ma to discuss research opportunities in embodied intelligence and agent-driven robotics.",
     "positions": [
       {
         "title": "Postdoctoral Researchers",
         "english": "",
-        "description": "Conduct research in embodied robotics, low-altitude intelligent systems, and Agentic AI.",
+        "description": "Research in embodied robotics, low-altitude intelligent systems, and Agentic AI.",
         "note": "Please email to discuss position requirements and arrangements."
       },
       {
         "title": "Ph.D. Students",
         "english": "",
-        "description": "We welcome students seeking in-depth research in embodied intelligence, robotics, and autonomous systems.",
+        "description": "Doctoral research in embodied intelligence, robotics, and autonomous systems.",
         "note": "Eligibility and application dates follow the current university and school admissions notices."
       },
       {
         "title": "Master's Students",
         "english": "",
-        "description": "We welcome students interested in our research areas who wish to gain research and engineering experience.",
+        "description": "Research and engineering work in the group's research areas.",
         "note": "Please contact us in line with the university and school admissions schedule."
       },
       {
         "title": "Undergraduate Research Interns",
         "english": "",
-        "description": "We welcome undergraduate students interested in embodied intelligence with practical engineering skills.",
+        "description": "For undergraduates with practical engineering skills and an interest in embodied intelligence.",
         "note": "In your email, describe your previous projects and availability."
       }
     ],
     "application": [
-      "Send your application materials to our contact email.",
+      "Email your application materials to coltlight@163.com.",
       "Include your CV and relevant research or engineering project experience.",
       "Add links to publications, code, or a personal website if available."
     ],
     "subject": "Position-Name-University-Year of Study-Research Area",
     "cultureTitle": "Recruitment",
     "cultureEnglish": "",
-    "culture": "The official faculty profile states that recruitment is ongoing. Please email directly to discuss positions, research topics, and application arrangements.",
+    "culture": "Recruitment is ongoing, according to the official faculty profile. Email Xiaoguang Ma for current openings, research topics, and application details.",
     "sourceUrl": "https://sai.tju.edu.cn/info/1361/6321.htm"
   },
   "contact": {
-    "intro": "For research collaboration, academic exchange, or opportunities to join the group, contact Professor Xiaoguang Ma at the public email address below.",
+    "intro": "For research collaboration, academic exchange, or applications, email Xiaoguang Ma.",
     "visit": "Before visiting, please email to confirm the campus, building, and meeting time.",
-    "directions": "Explore the official links below for more information about the university and school."
+    "directions": "University and school websites:"
   },
   "projects": [
     {

@@ -1,5 +1,6 @@
 import { loadPublicContent, getRepositoryConfiguration, connectRepository, disconnectRepository, publishContent } from './github.mjs';
 import { validateContent, mergeContent } from './content.mjs';
+import { renderWebsite } from './site-renderer.mjs';
 
 const $ = id => document.getElementById(id);
 const clone = value => structuredClone(value);
@@ -10,6 +11,7 @@ let dirty = false;
 let busy = false;
 let activeSection = 'site';
 let fieldCounter = 0;
+const expandedEntries = new Set();
 const uploads = new Map();
 const imagePreviews = new Map();
 const sections = [
@@ -17,14 +19,14 @@ const sections = [
   ['home', 'Home', 'The introduction and recruitment message on the homepage.'],
   ['research', 'Research', 'Research areas in the order they appear on the homepage.'],
   ['news', 'News', 'News items in display order. Add recent news at the top.'],
-  ['publications', 'Publications', 'Papers, publication links, and research summaries. Mark selected papers to feature them on the homepage.'],
+  ['publications', 'Publications', 'Compact citations: author names, paper title, venue, and year. Select papers to include on the homepage.'],
   ['team', 'People', 'Faculty, Ph.D. students, master’s students, and research interns.'],
   ['join', 'Join Us', 'Open positions, application instructions, and recruitment information.'],
   ['contact', 'Contact', 'Collaboration and visiting information. The public email and institution are under Website basics.'],
   ['projects', 'Projects', 'Funded research projects displayed on the Publications page.']
 ];
 const labels = {
-  name: 'Name', subtitle: 'Header subtitle', mark: 'Logo initials', institution: 'Institution', description: 'Description',
+  name: 'Name', subtitle: 'Header subtitle', mark: 'Browser icon initials', institution: 'Institution', description: 'Description',
   demo: 'Show example content notice', updated: 'Source information checked', email: 'Contact email', address: 'Visit location', postalCode: 'Postal code',
   image: 'Homepage image', imageAlt: 'Image description (accessibility)', imageCaption: 'Image caption', links: 'Links', label: 'Link label', url: 'URL',
   imagePortrait: 'Use portrait layout', imageWidth: 'Original image width', imageHeight: 'Original image height', imageSource: 'Image source URL',
@@ -46,7 +48,12 @@ const helps = {
   imagePortrait: 'Enable for a portrait; disable for a wider image.',
   imageSource: 'Optional link to the original photo source.',
   selected: 'Selected papers also appear on the homepage.',
-  id: 'A short, unique identifier such as aerial-navigation. Use letters, numbers, and hyphens.',
+  id: 'Created automatically for new papers. Keep existing identifiers unchanged so saved links keep working.',
+  authors: 'Author names exactly as they should appear in the citation.',
+  venue: 'Conference or journal name, including volume and pages if available. The year is added if needed.',
+  abstract: 'Stored for reference; not displayed in the compact publication list.',
+  area: 'Stored as research metadata; not displayed in the compact citation.',
+  note: 'Additional context for editors. Publication notes are not displayed in the compact list.',
   photo: 'Enter an existing image path or upload a photo below.',
   image: 'Enter an existing image path or upload an image below.',
   year: 'Four digits, for example 2026.',
@@ -75,14 +82,30 @@ function button(text, className, action) {
   return node;
 }
 function getAt(path) { return path.reduce((value, key) => value?.[key], content); }
+function initialsFor(name) {
+  return String(name || '').trim().split(/\s+/).filter(Boolean).slice(0, 2).map(word => word[0]).join('').toUpperCase();
+}
 function setAt(path, value) {
   const parent = getAt(path.slice(0, -1));
   const key = path.at(-1);
   if (key === 'name' && parent.englishName === parent.name) parent.englishName = value;
+  if (key === 'name' && Object.hasOwn(parent, 'initials') && (!parent.initials || parent.initials === initialsFor(parent.name))) {
+    parent.initials = initialsFor(value);
+    const fieldPath = path.slice(0, -1).concat('initials').join('.');
+    const input = [...document.querySelectorAll('input[data-field-path]')].find(node => node.dataset.fieldPath === fieldPath);
+    if (input) input.value = parent.initials;
+  }
   if (key === 'title' && parent.english === parent.title) parent.english = value;
   if (key === 'title' && parent.englishTitle === parent.title) parent.englishTitle = value;
   parent[key] = value;
   markDirty();
+  if (path[0] === 'publications' && typeof path[1] === 'number') refreshCitation(path[1]);
+  if (['title', 'name', 'label', 'institution'].includes(key)) {
+    const entryPath = path.slice(0, -1).join('.');
+    const card = [...document.querySelectorAll('[data-entry-path]')].find(node => node.dataset.entryPath === entryPath);
+    const heading = card?.querySelector(':scope > .entry-header h4');
+    if (heading) heading.textContent = entryLabel(parent, path.at(-2));
+  }
 }
 function labelFor(key) { return labels[key] || String(key).replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, char => char.toUpperCase()); }
 function displayRepositoryTarget(configuration) {
@@ -119,6 +142,9 @@ function showErrors(errors = []) {
   $('error-box').hidden = errors.length === 0;
 }
 function updateState() {
+  updateOverview();
+  $('preview-button').disabled = !content || busy;
+  document.querySelectorAll('[data-quick-add], #section-nav button').forEach(button => { button.disabled = !content || busy; });
   $('draft-state').classList.toggle('dirty', dirty);
   $('draft-label').textContent = dirty ? 'Unsaved changes in this tab' : 'No unsaved changes';
   $('submit-button').disabled = !session || !content || !dirty || busy;
@@ -130,6 +156,15 @@ function updateState() {
   $('content-panel').inert = busy;
   document.body.classList.toggle('busy-mode', busy);
   $('content-panel').setAttribute('aria-busy', String(busy || !content));
+}
+function updateOverview() {
+  const counts = {
+    'count-publications': content?.publications?.length || 0,
+    'count-faculty': content?.team?.teachers?.length || 0,
+    'count-students': (content?.team?.groups || []).reduce((sum, group) => sum + (group.members?.length || 0), 0),
+    'count-news': content?.news?.length || 0
+  };
+  for (const [id, count] of Object.entries(counts)) $(id).textContent = content ? String(count) : '—';
 }
 function markDirty() {
   dirty = !baselineContent || JSON.stringify(content) !== JSON.stringify(baselineContent) || activeUploads().length > 0;
@@ -169,7 +204,7 @@ function defaultEntry(path, currentArray) {
   if (key === 'links') return { label: '', url: '' };
   if (key === 'research' || path[0] === 'research' && path.length === 1) return { number: String(currentArray.length + 1).padStart(2, '0'), title: '', english: '', description: '' };
   if (key === 'news') return { date: new Date().toLocaleDateString('en-CA').replaceAll('-', '.'), category: 'News', text: '', url: '' };
-  if (key === 'publications') return { id: '', year: String(new Date().getFullYear()), title: '', englishTitle: '', titleLang: 'en', authors: '', venue: '', area: '', abstract: '', selected: false, links: [], note: '' };
+  if (key === 'publications') return { id: 'paper-' + crypto.randomUUID(), year: String(new Date().getFullYear()), title: '', englishTitle: '', titleLang: 'en', authors: '', venue: '', area: '', abstract: '', selected: false, links: [], note: '' };
   if (key === 'teachers') return { name: '', englishName: '', role: '', initials: '', photo: '', bio: '', links: [], experience: [], education: [] };
   if (key === 'members') return { name: '', englishName: '', role: '', initials: '', photo: '', url: '' };
   if (['experience', 'education'].includes(key)) return { period: '', institution: '', detail: '' };
@@ -183,8 +218,38 @@ function findArrayBlock(path) { return [...document.querySelectorAll('[data-arra
 function focusEntry(path, index, mode = 'input') {
   const block = findArrayBlock(path);
   const card = [...(block?.querySelector(':scope > .entry-list')?.children || [])][index];
-  const target = mode === 'input' ? card?.querySelector('input, textarea') : card?.querySelector(`.entry-actions button:nth-child(${mode === 'up' ? 1 : 2})`);
+  if (card?.tagName === 'DETAILS') card.open = true;
+  const target = mode === 'input'
+    ? (card?.querySelector('input[data-field-path$=".title"], textarea[data-field-path$=".title"]') || card?.querySelector('input[data-field-path$=".name"]') || card?.querySelector('input, textarea'))
+    : card?.querySelector('.entry-actions button:nth-child(' + (mode === 'up' ? 1 : 2) + ')');
   if (target && !target.disabled) target.focus(); else block?.querySelector('.array-heading button')?.focus();
+}
+function addEntry(path) {
+  if (!content || busy) return;
+  const values = getAt(path);
+  if (!Array.isArray(values)) return;
+  const prepend = path.length === 1 && ['news', 'publications'].includes(path[0]);
+  const entry = defaultEntry(path, values);
+  if (prepend) values.unshift(entry); else values.push(entry);
+  const index = prepend ? 0 : values.length - 1;
+  expandedEntries.add(path.concat(index).join('.'));
+  activeSection = path[0];
+  markDirty(); render(); focusEntry(path, index);
+  setStatus('Added ' + singularFor(path.at(-1)) + ' to your draft. Complete the fields, preview, then submit.');
+}
+function citationText(paper) {
+  const sentence = value => {
+    const text = String(value || '').trim();
+    return text && !/[.!?]$/.test(text) ? text + '.' : text;
+  };
+  const hasYear = String(paper.venue || '').match(/\b\d{4}\b/g)?.includes(paper.year);
+  const venue = hasYear ? paper.venue : [paper.venue, paper.year].filter(Boolean).join(', ');
+  return [sentence(paper.authors || 'Author names'), sentence(paper.title || 'Paper title'), sentence(venue)].filter(Boolean).join(' ');
+}
+function refreshCitation(index) {
+  const card = [...document.querySelectorAll('[data-entry-path]')].find(node => node.dataset.entryPath === 'publications.' + index);
+  const preview = card?.querySelector('.citation-preview-text');
+  if (preview) preview.textContent = citationText(content.publications[index]);
 }
 function entryLabel(value, index) {
   if (typeof value === 'string') return `Item ${index + 1}`;
@@ -197,25 +262,27 @@ function renderArray(path, title = labelFor(path.at(-1))) {
   const values = getAt(path);
   const key = path.at(-1);
   const singular = singularFor(key);
+  const collapsible = path.length === 1 || ['teachers', 'members'].includes(key);
   const block = element('section', 'array-block');
   const heading = element('div', 'array-heading');
   const headingText = element('div');
   headingText.append(element('h3', '', title));
-  headingText.append(element('p', 'help', 'Use the arrows to change the display order.'));
-  heading.append(headingText, button(`+ Add ${singular}`, 'button-secondary', () => {
-    values.push(defaultEntry(path, values));
-    markDirty();
-    render();
-    focusEntry(path, values.length - 1);
-    setStatus(`Added ${singular} to the draft.`);
-  }));
+  headingText.append(element('p', 'help', collapsible ? 'Click a title to edit. Use the arrows to change the order.' : 'Use the arrows to change the display order.'));
+  heading.append(headingText, button('+ Add ' + singular, 'button-secondary', () => addEntry(path)));
   block.append(heading);
   block.dataset.arrayPath = path.join('.');
   if (!values.length) block.append(element('p', 'empty-list', `No ${title.toLowerCase()} listed. Add an entry to get started.`));
   const list = element('div', 'entry-list');
   values.forEach((value, index) => {
-    const card = element('article', typeof value === 'string' ? 'entry-card string-entry' : 'entry-card');
-    const header = element('div', 'entry-header');
+    const card = element(collapsible ? 'details' : 'article', typeof value === 'string' ? 'entry-card string-entry' : 'entry-card');
+    card.dataset.entryPath = path.concat(index).join('.');
+    if (collapsible) {
+      card.open = expandedEntries.has(card.dataset.entryPath);
+      card.addEventListener('toggle', () => {
+        if (card.open) expandedEntries.add(card.dataset.entryPath); else expandedEntries.delete(card.dataset.entryPath);
+      });
+    }
+    const header = element(collapsible ? 'summary' : 'div', 'entry-header');
     header.append(element('h4', '', entryLabel(value, index)));
     const actions = element('div', 'entry-actions');
     const up = button('↑', 'button-secondary move-button', () => {
@@ -237,6 +304,11 @@ function renderArray(path, title = labelFor(path.at(-1))) {
     });
     remove.setAttribute('aria-label', `Remove ${singular} ${index + 1}`);
     actions.append(up, down, remove); header.append(actions); card.append(header);
+    if (key === 'publications') {
+      const preview = element('div', 'citation-preview');
+      preview.append(element('p', 'help', 'Citation on the public website'), element('p', 'citation-preview-text', citationText(value)));
+      card.append(preview);
+    }
     if (value && typeof value === 'object' && !Array.isArray(value)) card.append(renderObject([...path, index]));
     else card.append(renderField([...path, index], typeof value === 'string' ? value : JSON.stringify(value), `${singular[0].toUpperCase()}${singular.slice(1)}`, true));
     list.append(card);
@@ -244,10 +316,19 @@ function renderArray(path, title = labelFor(path.at(-1))) {
   block.append(list);
   return block;
 }
+function isAdvancedField(path, key) {
+  if (path.length === 1 && path[0] === 'site') return ['mark', 'demo', 'updated', 'imageWidth', 'imageHeight', 'imageSource', 'sourceUrl'].includes(key);
+  if (path.length === 1 && path[0] === 'home') return key === 'eyebrow';
+  if (path[0] === 'research') return key === 'number';
+  if (path[0] === 'news') return key === 'category';
+  if (path[0] === 'publications') return ['id', 'area', 'abstract', 'note'].includes(key);
+  return path[0] === 'team' && key === 'initials';
+}
 function renderObject(path, omitted = []) {
   const object = getAt(path);
   const fields = element('div', 'object-fields');
   const additional = [];
+  const advanced = [];
   for (const [key, value] of Object.entries(object || {})) {
     if (omitted.includes(key)) continue;
     if (legacyKeys.has(key)) {
@@ -255,17 +336,19 @@ function renderObject(path, omitted = []) {
       if (value && value !== equivalent && !(key === 'titleLang' && value === 'en')) additional.push(renderField([...path, key], value));
       continue;
     }
-    if (Array.isArray(value)) fields.append(renderArray([...path, key]));
+    let field;
+    if (Array.isArray(value)) field = renderArray([...path, key]);
     else if (value && typeof value === 'object') {
-      const block = element('section', 'array-block');
-      block.append(element('h3', '', labelFor(key)), renderObject([...path, key]));
-      fields.append(block);
-    } else fields.append(renderField([...path, key], value));
+      field = element('section', 'array-block');
+      field.append(element('h3', '', labelFor(key)), renderObject([...path, key]));
+    } else field = renderField([...path, key], value);
+    if (isAdvancedField(path, key)) advanced.push(field); else fields.append(field);
   }
-  if (additional.length) {
+  for (const [title, entries] of [['Advanced settings and metadata', advanced], ['Alternative labels', additional]]) {
+    if (!entries.length) continue;
     const details = element('details', 'extra-fields');
-    details.append(element('summary', '', 'Alternative labels'));
-    const extra = element('div', 'object-fields'); extra.append(...additional); details.append(extra); fields.append(details);
+    details.append(element('summary', '', title));
+    const extra = element('div', 'object-fields'); extra.append(...entries); details.append(extra); fields.append(details);
   }
   return fields;
 }
@@ -279,6 +362,7 @@ function renderField(path, value, customLabel, forceLong = false) {
   if (typeof value === 'boolean') {
     field.className = 'field checkbox-field';
     const input = element('input'); input.id = id; input.type = 'checkbox'; input.checked = value;
+    input.dataset.fieldPath = path.join('.');
     input.addEventListener('change', () => setAt(path, input.checked));
     field.append(input, fieldLabel);
     return field;
@@ -286,6 +370,7 @@ function renderField(path, value, customLabel, forceLong = false) {
   const long = forceLong || longKeys.has(key) || String(value ?? '').length > 160;
   const input = element(long ? 'textarea' : 'input');
   input.id = id;
+  input.dataset.fieldPath = path.join('.');
   if (!long) input.type = typeof value === 'number' ? 'number' : key === 'email' ? 'email' : key === 'updated' ? 'date' : 'text';
   if (typeof value === 'number') { input.min = '1'; input.step = '1'; }
   if (key === 'id') { input.pattern = '[a-z0-9-]+'; input.spellcheck = false; }
@@ -327,9 +412,10 @@ function addImageUpload(field, path, input) {
   const pending = element('p', 'image-pending', 'New image ready to publish'); pending.hidden = true; uploadBox.append(pending);
   file.addEventListener('change', async () => {
     const image = file.files?.[0]; file.value = '';
-    if (!image) return;
+    if (!image || busy) return;
     if (!allowedImages[image.type]) { showErrors(['Choose a JPEG, PNG, or WebP image.']); return; }
     if (image.size > maxImageBytes || image.size === 0) { showErrors(['Each image must be larger than 0 bytes and no larger than 3 MB.']); return; }
+    setBusy(true); setStatus('Reading the selected image…', true);
     try {
       const bitmap = await createImageBitmap(image);
       const dimensions = { width: bitmap.width, height: bitmap.height };
@@ -345,7 +431,8 @@ function addImageUpload(field, path, input) {
         markDirty(); render();
       }
       showErrors(); setStatus('Image added to your draft. Submit changes to upload it.');
-    } catch (error) { showErrors([`Could not read this image: ${error.message}`]); }
+    } catch (error) { showErrors([`Could not read this image: ${error.message}`]); setStatus('Image not added. Your other changes are preserved.'); }
+    finally { setBusy(false); }
   });
   controls.append(preview, uploadBox); field.append(controls); refreshImagePreview(field, input.value);
 }
@@ -482,8 +569,11 @@ $('submit-button').addEventListener('click', async () => {
   setBusy(true); showErrors(); $('publish-result').hidden = true;
   setStatus('Submitting the content and images to GitHub…', true);
   try {
-    const result = await publishContent(session, clone(content), newImages, 'Update research group website content');
-    dirty = false; uploads.clear();
+    const submitted = clone(content);
+    const result = await publishContent(session, submitted, newImages, 'Update research group website content');
+    baselineContent = clone(submitted);
+    uploads.clear();
+    dirty = JSON.stringify(content) !== JSON.stringify(baselineContent);
     $('commit-link').href = result.commitUrl;
     $('actions-link').href = result.actionsUrl || `${result.repositoryUrl || $('repository-link').href}/actions`;
     $('publish-result').hidden = false;
@@ -530,6 +620,7 @@ $('draft-file').addEventListener('change', async () => {
     if (dirty && !await choice('Replace your current draft?', 'Importing will replace the unfinished edits in this tab. Download the current draft first if you want to keep it.', [
       { label: 'Cancel', value: false, className: 'button-secondary' }, { label: 'Import draft', value: true }
     ])) return;
+    disconnectCurrentSession();
     replaceContent(data, { baseline });
     for (const item of importedImages) { uploads.set(item.path, item); imagePreviews.set(item.path, URL.createObjectURL(new Blob([item.bytes], { type: item.mimeType }))); }
     markDirty(); render();
@@ -538,6 +629,104 @@ $('draft-file').addEventListener('change', async () => {
   } catch (error) { showErrors([`Could not import this draft: ${error.message}`]); }
   finally { setBusy(false); }
 });
+
+const quickAddPaths = {
+  publication: () => ['publications'],
+  news: () => ['news'],
+  faculty: () => ['team', 'teachers'],
+  phd: () => ['team', 'groups', content.team.groups.findIndex(group => group.id === 'phd'), 'members'],
+  masters: () => ['team', 'groups', content.team.groups.findIndex(group => group.id === 'masters'), 'members'],
+  interns: () => ['team', 'groups', content.team.groups.findIndex(group => group.id === 'interns'), 'members']
+};
+document.querySelectorAll('[data-quick-add]').forEach(control => control.addEventListener('click', () => {
+  if (content && !busy) addEntry(quickAddPaths[control.dataset.quickAdd]());
+}));
+
+let previewDialog = null;
+let previewFrame = null;
+let previewPages = null;
+const previewPageNames = {
+  'index.html': 'Home', 'publications.html': 'Publications', 'team.html': 'People', 'join.html': 'Join Us', 'contact.html': 'Contact'
+};
+function scrollPreviewTarget(frameDocument, hash) {
+  let id = hash.replace(/^#/, '');
+  try { id = decodeURIComponent(id); } catch {}
+  const target = frameDocument.getElementById(id);
+  target?.scrollIntoView();
+  target?.focus({ preventScroll: true });
+}
+function showPreviewPage(filename, hash = '') {
+  if (!Object.hasOwn(previewPages, filename)) return;
+  previewDialog.querySelectorAll('[data-preview-page]').forEach(control => {
+    if (control.dataset.previewPage === filename) control.setAttribute('aria-current', 'page');
+    else control.removeAttribute('aria-current');
+  });
+  const documentCopy = new DOMParser().parseFromString(previewPages[filename], 'text/html');
+  const base = document.createElement('base');
+  base.href = new URL('../', location.href).href;
+  documentCopy.head.prepend(base);
+  previewFrame.onload = () => {
+    const frameDocument = previewFrame.contentDocument;
+    if (!frameDocument) return;
+    frameDocument.querySelectorAll('a[href]').forEach(link => link.addEventListener('click', event => {
+      const href = link.getAttribute('href');
+      if (href.startsWith('#')) {
+        event.preventDefault(); scrollPreviewTarget(frameDocument, href); return;
+      }
+      const target = new URL(href, frameDocument.baseURI);
+      const targetFile = target.pathname.split('/').pop() || 'index.html';
+      const root = new URL('../', location.href);
+      const currentSitePath = target.pathname === new URL(targetFile, root).pathname || (targetFile === 'index.html' && target.pathname === root.pathname);
+      if (target.origin === location.origin && currentSitePath && Object.hasOwn(previewPages, targetFile)) {
+        event.preventDefault();
+        showPreviewPage(targetFile, target.hash);
+      } else if (target.origin === location.origin && target.hash && target.pathname === new URL('../' + filename, location.href).pathname) {
+        event.preventDefault();
+        scrollPreviewTarget(frameDocument, target.hash);
+      } else {
+        link.target = '_blank'; link.rel = 'noopener noreferrer';
+      }
+    }));
+    if (hash) scrollPreviewTarget(frameDocument, hash);
+  };
+  previewFrame.srcdoc = '<!doctype html>\n' + documentCopy.documentElement.outerHTML;
+}
+function openPreview() {
+  if (!content || busy) return;
+  const errors = validateContent(content);
+  if (errors.length) {
+    showErrors(errors);
+    setStatus('Complete the listed fields before previewing. Your draft is preserved.');
+    $('error-box').scrollIntoView({ block: 'center' });
+    return;
+  }
+  showErrors();
+  try { previewPages = renderWebsite(clone(content), { imageUrl: path => imagePreviews.get(path) }); }
+  catch (error) { showErrors([error.message || 'Could not preview this draft.']); return; }
+  if (!previewDialog) {
+    previewDialog = element('dialog', 'preview-dialog'); previewDialog.id = 'preview-dialog';
+    previewDialog.setAttribute('aria-labelledby', 'preview-title');
+    const header = element('div', 'preview-header');
+    const description = element('div');
+    const title = element('h2', '', 'Preview changes'); title.id = 'preview-title';
+    description.append(title, element('p', 'help', 'Unpublished preview. Close this window to continue editing.'));
+    header.append(description, button('Close preview', 'button-secondary', () => previewDialog.close()));
+    const nav = element('nav', 'preview-nav'); nav.setAttribute('aria-label', 'Preview pages');
+    nav.append(...Object.entries(previewPageNames).map(([filename, label]) => {
+      const control = button(label, 'button-secondary', () => showPreviewPage(filename));
+      control.dataset.previewPage = filename; return control;
+    }));
+    previewFrame = element('iframe', 'preview-frame');
+    previewFrame.title = 'Unpublished website preview';
+    previewFrame.setAttribute('sandbox', 'allow-same-origin allow-popups allow-popups-to-escape-sandbox');
+    previewDialog.append(header, nav, previewFrame); document.body.append(previewDialog);
+  }
+  const initial = ({ publications: 'publications.html', projects: 'publications.html', team: 'team.html', join: 'join.html', contact: 'contact.html' })[activeSection] || 'index.html';
+  showPreviewPage(initial);
+  previewDialog.showModal();
+}
+$('preview-button').addEventListener('click', openPreview);
+
 window.addEventListener('beforeunload', event => { if (dirty) { event.preventDefault(); event.returnValue = ''; } });
 
 getRepositoryConfiguration().then(configuration => {

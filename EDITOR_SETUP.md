@@ -55,6 +55,12 @@ Token 代表自己的仓库权限，每个人使用自己的 token，不共享�
 
 ## 5. 日常修改
 
+编辑页顶部的 **Content overview** 显示论文、老师、学生与实习生、新闻数量。可点击 **Add publication / Add news item / Add faculty member / Add Ph.D. student / Add master's student / Add research intern** 直接进入新增表单。
+
+论文只需填写题名、作者、年份和会议／期刊，并按需添加原文链接；编号会自动生成。表单中的 **Citation on the public website** 会同步显示紧凑引用。成员填写英文姓名后会自动生成无照片时使用的缩写，也可直接上传照片。现有记录点击标题即可展开；技术字段和不在当前公开版式中显示的资料收在 **Advanced settings and metadata** 中。
+
+**Preview changes** 使用与正式网站相同的模板预览尚未提交的五个页面，包括刚选中的新照片；预览本身不需要连接 GitHub，也不会发布。预览后关闭窗口继续编辑，再点击 **Submit changes** 保存发布。
+
 1. 打开已发布网站的 `/admin/`，核对目标仓库和分支，用自己的 token 点击 **Connect GitHub**。
 2. 等页面载入仓库的最新内容，再选择栏目，填写英文资料。People 页仍按 **Faculty / Ph.D. Students / Master’s Students / Research Interns** 分组。
 3. 修改完成后点击 **Submit changes**。页面会显示 GitHub 保存结果，自动发布由仓库的 **Actions** 记录确认。

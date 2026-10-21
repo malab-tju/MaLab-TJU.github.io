@@ -6,7 +6,7 @@
   "scripts": {
     "build": "node tools/build.mjs",
     "start": "node tools/preview.mjs",
-    "test": "node --test tools/editor.test.mjs"
+    "test": "node --test tools/editor.test.mjs tools/renderer.test.mjs"
   },
   "engines": {
     "node": ">=18"

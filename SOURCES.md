@@ -49,7 +49,7 @@
 - [DOI:10.1109/ICRA55743.2025.11128631](https://doi.org/10.1109/ICRA55743.2025.11128631)
 - [项目与数据集](https://neufs-ma.github.io/M3DSS/)
 - [项目仓库](https://github.com/NEUFS-MA/M3DSS)
-- ICRA 2025，14542–14549。按钮使用 `Project / Dataset`，没有把数据集网站仓库误标为完整 SLAM 算法代码。
+- ICRA 2025，14542–14549。论文题名链接至 DOI；项目与数据集链接保存在内容文件中，没有把数据集网站仓库误标为完整 SLAM 算法代码。
 
 ### Frefusion
 

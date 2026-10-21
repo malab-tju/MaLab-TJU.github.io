@@ -94,7 +94,7 @@ details .abstract { margin: 6px 0 0; padding: 0 0 0 12px; border-left: 1px solid
 .person-role { margin: 5px 0 9px; color: var(--muted); font-size: 13px; line-height: 1.6; }
 .lead-profile .bio { font-size: 14px; line-height: 1.8; }
 .members { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 25px; }
-.member { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 13px; align-items: start; }
+.member { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 16px; align-items: start; }
 .member h3 { font-size: 14px; }
 .member .person-role { margin: 3px 0 0; font-size: 12px; }
 .team-group + .team-group { margin-top: 34px; padding-top: 22px; border-top: 1px solid var(--line); }
@@ -203,7 +203,7 @@ details .abstract { margin: 6px 0 0; padding: 0 0 0 12px; border-left: 1px solid
   .lead-profile h3 { font-size: 22px; }
   .faculty-history { margin-left: 0; padding-top: 4px; }
   .members { grid-template-columns: 1fr; gap: 20px; }
-  .member { grid-template-columns: 64px minmax(0, 1fr); }
+  .member { grid-template-columns: 80px minmax(0, 1fr); }
   .opportunity { display: block; padding: 15px 0; }
   .opportunity h2 { margin-bottom: 7px; }
   .application { display: block; }

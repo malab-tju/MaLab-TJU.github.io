@@ -194,7 +194,16 @@
         "title": "Ph.D. Students",
         "english": "",
         "emptyMessage": "Profiles to be added.",
-        "members": []
+        "members": [
+          {
+            "name": "Zhicheng Wang",
+            "englishName": "Zhicheng Wang",
+            "role": "Computer Vision and Machine Learning",
+            "initials": "ZW",
+            "photo": "assets/images/editor-bdc66857-ddd8-4062-9493-ec5beb455120.png",
+            "url": "https://orcid.org/0000-0001-7113-731X"
+          }
+        ]
       },
       {
         "id": "masters",

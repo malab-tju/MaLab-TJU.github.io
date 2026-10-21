@@ -202,6 +202,14 @@
             "initials": "ZW",
             "photo": "assets/images/editor-bdc66857-ddd8-4062-9493-ec5beb455120.png",
             "url": "https://orcid.org/0000-0001-7113-731X"
+          },
+          {
+            "name": "Xiangyu Dong",
+            "englishName": "Xiangyu Dong",
+            "role": "Embodied Agents",
+            "initials": "XD",
+            "photo": "assets/images/editor-5b1610f6-261e-4685-89bb-c9583c9af8d9.png",
+            "url": "https://xiangyudongai.github.io/"
           }
         ]
       },
